@@ -1,1 +1,8 @@
 rootProject.name = 'ringle'
+
+include 'ringle-admin'
+include 'ringle-apis'
+include 'ringle-domain'
+include 'ringle-gateway'
+include 'ringle-global-utils'
+include 'ringle-infra'
