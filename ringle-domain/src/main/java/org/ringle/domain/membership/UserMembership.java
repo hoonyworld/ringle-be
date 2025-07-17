@@ -30,10 +30,16 @@ public class UserMembership extends BaseTimeEntity {
 	private Long userId;
 
 	@Column(nullable = false)
-	private Integer planId;
+	private Long planId;
 
 	@Column(nullable = false)
 	private int remainingConversations;
+
+	@Column(nullable = false)
+	private int remainingRolePlaying;
+
+	@Column(nullable = false)
+	private int remainingDiscussion;
 
 	@Column(nullable = false)
 	private int remainingAnalysis;
@@ -50,8 +56,10 @@ public class UserMembership extends BaseTimeEntity {
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private UserMembership(Long userId,
-		Integer planId,
+		Long planId,
 		int remainingConversations,
+		int remainingRolePlaying,
+		int remainingDiscussion,
 		int remainingAnalysis,
 		LocalDate startDate,
 		LocalDate expiryDate,
@@ -60,15 +68,20 @@ public class UserMembership extends BaseTimeEntity {
 		this.userId = userId;
 		this.planId = planId;
 		this.remainingConversations = remainingConversations;
+		this.remainingRolePlaying = remainingRolePlaying;
+		this.remainingDiscussion = remainingDiscussion;
 		this.remainingAnalysis = remainingAnalysis;
 		this.startDate = startDate;
 		this.expiryDate = expiryDate;
 		this.status = status;
 	}
 
-	public static UserMembership create(Long userId,
-		Integer planId,
+	public static UserMembership create(
+		Long userId,
+		Long planId,
 		int remainingConversations,
+		int remainingRolePlaying,
+		int remainingDiscussion,
 		int remainingAnalysis,
 		LocalDate startDate,
 		LocalDate expiryDate,
@@ -78,6 +91,8 @@ public class UserMembership extends BaseTimeEntity {
 			.userId(userId)
 			.planId(planId)
 			.remainingConversations(remainingConversations)
+			.remainingRolePlaying(remainingRolePlaying)
+			.remainingDiscussion(remainingDiscussion)
 			.remainingAnalysis(remainingAnalysis)
 			.startDate(startDate)
 			.expiryDate(expiryDate)
@@ -87,8 +102,10 @@ public class UserMembership extends BaseTimeEntity {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof UserMembership that)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof UserMembership that))
+			return false;
 		return id != null && id.equals(that.id);
 	}
 
