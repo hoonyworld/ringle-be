@@ -6,6 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,5 +26,8 @@ public interface MembershipApi {
 		@ApiResponse(responseCode = "404", description = "멤버십 정보 없음")
 	})
 	@GetMapping("/me")
-	ResponseEntity<UserMembershipInfoResponse> getUserMembership(@AuthenticationPrincipal Long userId);
+	ResponseEntity<UserMembershipInfoResponse> getUserMembership(
+		@Parameter(hidden = true, description = "인증된 사용자 ID")
+		@AuthenticationPrincipal Long userId
+	);
 }
