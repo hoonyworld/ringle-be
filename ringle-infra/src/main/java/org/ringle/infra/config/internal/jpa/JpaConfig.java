@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EntityScan(basePackages = "org.ringle.infra")
-@EnableJpaRepositories(basePackages = "org.ringle.infra")
+@EntityScan(basePackages = "org.ringle.domain")
+@EnableJpaRepositories(basePackages = "org.ringle.domain")
 public class JpaConfig implements InfraBaseConfig {
 }
 
