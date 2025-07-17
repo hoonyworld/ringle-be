@@ -2,6 +2,7 @@ package org.ringle.apis.auth.usecase;
 
 import org.ringle.apis.auth.dto.request.SocialLoginRequest;
 import org.ringle.apis.auth.dto.response.AuthResponse;
+import org.ringle.apis.auth.dto.response.UserProfileResponse;
 import org.ringle.apis.auth.service.UserAuthService;
 import org.ringle.domain.user.vo.UserIdentity;
 import org.ringle.gateway.jwt.JwtTokenService;
@@ -24,5 +25,10 @@ public class AuthUseCase {
 		String refreshToken = jwtTokenService.generateRefreshToken(identity.id());
 
 		return AuthResponse.of(accessToken, refreshToken, identity);
+	}
+
+	public UserProfileResponse getUserProfile(Long userId) {
+		UserIdentity identity = userAuthService.findUserById(userId);
+		return UserProfileResponse.from(identity);
 	}
 }

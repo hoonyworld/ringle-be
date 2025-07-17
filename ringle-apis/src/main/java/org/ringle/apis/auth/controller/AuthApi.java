@@ -2,8 +2,11 @@ package org.ringle.apis.auth.controller;
 
 import org.ringle.apis.auth.dto.request.SocialLoginRequest;
 import org.ringle.apis.auth.dto.response.AuthResponse;
+import org.ringle.apis.auth.dto.response.UserProfileResponse;
 import org.ringle.globalutils.exception.ErrorResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -39,20 +42,20 @@ public interface AuthApi {
 	@PostMapping("/login")
 	ResponseEntity<AuthResponse> signIn(@Valid @RequestBody SocialLoginRequest request);
 
-	// @Operation(
-	// 	summary = "사용자 프로필 조회",
-	// 	description = "사용자 ID를 기반으로 프로필 정보를 조회합니다."
-	// )
-	// @ApiResponse(
-	// 	responseCode = "200",
-	// 	description = "프로필 정보 조회 성공",
-	// 	content = @Content(schema = @Schema(implementation = UserProfileResponse.class))
-	// )
-	// @ApiResponse(
-	// 	responseCode = "404",
-	// 	description = "사용자를 찾을 수 없음",
-	// 	content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-	// )
-	// @GetMapping("/me")
-	// ResponseEntity<UserProfileResponse> getUserProfile(@AuthenticationPrincipal Long userId);
+	@Operation(
+		summary = "사용자 프로필 조회",
+		description = "사용자 ID를 기반으로 프로필 정보를 조회합니다."
+	)
+	@ApiResponse(
+		responseCode = "200",
+		description = "프로필 정보 조회 성공",
+		content = @Content(schema = @Schema(implementation = UserProfileResponse.class))
+	)
+	@ApiResponse(
+		responseCode = "404",
+		description = "사용자를 찾을 수 없음",
+		content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+	)
+	@GetMapping("/me")
+	ResponseEntity<UserProfileResponse> getUserProfile(@AuthenticationPrincipal Long userId);
 }

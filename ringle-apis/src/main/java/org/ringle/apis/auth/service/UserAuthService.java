@@ -31,4 +31,11 @@ public class UserAuthService {
 
 		return UserIdentity.newInstance(user);
 	}
+
+	public UserIdentity findUserById(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+		return UserIdentity.newInstance(user);
+	}
 }
