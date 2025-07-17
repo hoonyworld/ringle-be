@@ -35,7 +35,7 @@ public record AuthResponse(
 		@Schema(description = "사용자 이메일", example = "user@example.com")
 		String email,
 		@Schema(description = "사용자 닉네임", example = "닉네임")
-		String nickname,
+		String name,
 		@Schema(description = "사용자 역할", example = "USER")
 		String role
 	) {
