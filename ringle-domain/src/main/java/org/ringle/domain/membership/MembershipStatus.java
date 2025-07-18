@@ -1,5 +1,5 @@
 package org.ringle.domain.membership;
 
 public enum MembershipStatus {
-	ACTIVE, EXPIRED
+	ACTIVE, EXPIRED, INACTIVE
 }
