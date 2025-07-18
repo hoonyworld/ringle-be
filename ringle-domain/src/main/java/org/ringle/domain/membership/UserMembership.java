@@ -1,6 +1,7 @@
 package org.ringle.domain.membership;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import org.ringle.domain.BaseTimeEntity;
@@ -99,6 +100,16 @@ public class UserMembership extends BaseTimeEntity {
 			.expiryDate(expiryDate)
 			.status(MembershipStatus.INACTIVE)
 			.build();
+	}
+
+	public void activate() {
+		if (this.status == MembershipStatus.ACTIVE) {
+			throw new IllegalStateException("이미 활성화된 멤버십입니다.");
+		}
+		long durationInDays = ChronoUnit.DAYS.between(this.startDate, this.expiryDate);
+		this.status = MembershipStatus.ACTIVE;
+		this.startDate = LocalDate.now();
+		this.expiryDate = this.startDate.plusDays(durationInDays);
 	}
 
 

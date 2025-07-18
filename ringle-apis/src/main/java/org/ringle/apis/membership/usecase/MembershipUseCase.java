@@ -53,4 +53,9 @@ public class MembershipUseCase {
 
 		return UserMembershipInfoResponse.from(pendingMembership);
 	}
+
+	@Transactional
+	public void activateMembership(Long userId, Long membershipId) {
+		userMembershipInfoService.activate(userId, membershipId);
+	}
 }

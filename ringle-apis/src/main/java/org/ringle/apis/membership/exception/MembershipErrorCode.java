@@ -14,7 +14,10 @@ public enum MembershipErrorCode implements BaseErrorCode {
 	MEMBERSHIP_EXPIRED(HttpStatus.BAD_REQUEST, "MEMBERSHIP_002", "멤버십이 만료되었습니다."),
 	INVALID_MEMBERSHIP_STATUS(HttpStatus.BAD_REQUEST, "MEMBERSHIP_003", "멤버십 상태가 올바르지 않습니다."),
 
+	MEMBERSHIP_FORBIDDEN(HttpStatus.FORBIDDEN, "MEMBERSHIP_004", "해당 멤버십에 대한 접근 권한이 없습니다."),
+
 	USER_MEMBERSHIP_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_MEMBERSHIP_001", "해당 유저의 멤버십 정보가 존재하지 않습니다.");
+
 	private final HttpStatus httpStatus;
 	private final String code;
 	private final String message;

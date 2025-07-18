@@ -5,6 +5,7 @@ import java.util.List;
 import org.ringle.apis.auth.exception.UserErrorCode;
 import org.ringle.apis.auth.exception.UserNotFoundException;
 import org.ringle.apis.membership.exception.MembershipErrorCode;
+import org.ringle.apis.membership.exception.MembershipForbiddenException;
 import org.ringle.apis.membership.exception.MembershipPlanNotFoundException;
 import org.ringle.apis.membership.exception.UserMembershipNotFoundException;
 import org.ringle.domain.membership.MembershipPlan;
@@ -74,5 +75,16 @@ public class UserMembershipInfoService {
 			.orElseThrow(() -> new MembershipPlanNotFoundException(MembershipErrorCode.MEMBERSHIP_NOT_FOUND));
 
 		return UserMembershipInfo.newInstance(userMembership, membershipPlan);
+	}
+
+	public void activate(Long userId, Long membershipId) {
+		UserMembership userMembership = userMembershipRepository.findById(membershipId)
+			.orElseThrow(() -> new UserMembershipNotFoundException(MembershipErrorCode.USER_MEMBERSHIP_NOT_FOUND));
+
+		if (!userMembership.getUserId().equals(userId)) {
+			throw new MembershipForbiddenException(MembershipErrorCode.MEMBERSHIP_FORBIDDEN);
+		}
+
+		userMembership.activate();
 	}
 }
