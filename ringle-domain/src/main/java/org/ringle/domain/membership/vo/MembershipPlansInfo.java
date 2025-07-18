@@ -25,8 +25,8 @@ public record MembershipPlansInfo(List<MembershipPlanInfo> plans) {
 		int discussion,
 		int levelAnalysis,
 		int durationDays,
-		BigDecimal price
-	) {
+		BigDecimal price,
+		int priority) {
 		public static MembershipPlanInfo from(MembershipPlan plan) {
 			return new MembershipPlanInfo(
 				plan.getId(),
@@ -37,7 +37,8 @@ public record MembershipPlansInfo(List<MembershipPlanInfo> plans) {
 				plan.getDiscussionCount(),
 				plan.getAnalysisCount(),
 				plan.getDurationDays(),
-				plan.getPrice()
+				plan.getPrice(),
+				plan.getPriority()
 			);
 		}
 	}
