@@ -41,23 +41,28 @@ public class User extends BaseTimeEntity {
 	@Column(nullable = false)
 	private Role role;
 
+	@Column()
+	private Long companyId;
+
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
 	@Builder(access = AccessLevel.PRIVATE)
-	private User(String name, String email, String password, Role role) {
+	private User(String name, String email, String password, Role role, Long companyId) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.companyId = companyId;
 	}
 
-	public static User create(String name, String email, String password, Role role) {
+	public static User create(String name, String email, String password, Role role, Long companyId) {
 		return User.builder()
 			.name(name)
 			.email(email)
 			.password(password)
 			.role(role)
+			.companyId(companyId)
 			.build();
 	}
 
