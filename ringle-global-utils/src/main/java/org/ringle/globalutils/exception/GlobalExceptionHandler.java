@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
 		ErrorResponse error = ErrorResponse.builder()
 			.status(errorCode.getHttpStatus().value())
-			.message(ex.getMessage())
+			.message(errorCode.getMessage())
 			.code(errorCode.getCode())
 			.build();
 
@@ -93,12 +93,15 @@ public class GlobalExceptionHandler {
 	 * Handles HttpRequestMethodNotSupportedException.
 	 */
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+	protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+		HttpRequestMethodNotSupportedException ex) {
 		BaseErrorCode errorCode = CommonErrorCode.METHOD_NOT_ALLOWED;
-		String supportedMethods = ex.getSupportedHttpMethods() != null ? String.join(", ", ex.getSupportedHttpMethods().toString()) : "N/A";
+		String supportedMethods =
+			ex.getSupportedHttpMethods() != null ? String.join(", ", ex.getSupportedHttpMethods().toString()) : "N/A";
 		log.warn("HTTP method not supported: {}. Supported methods: {}", ex.getMethod(), supportedMethods, ex);
 
-		String message = String.format("HTTP method '%s' not supported for this endpoint. Supported methods: %s", ex.getMethod(), supportedMethods);
+		String message = String.format("HTTP method '%s' not supported for this endpoint. Supported methods: %s",
+			ex.getMethod(), supportedMethods);
 		ErrorResponse error = ErrorResponse.builder()
 			.status(errorCode.getHttpStatus().value())
 			.message(message)
