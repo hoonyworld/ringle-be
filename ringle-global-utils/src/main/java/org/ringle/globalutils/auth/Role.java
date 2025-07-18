@@ -2,6 +2,7 @@ package org.ringle.globalutils.auth;
 
 public enum Role {
 	USER("ROLE_USER"),
+	COMPANY("ROLE_COMPANY"),
 	ADMIN("ROLE_ADMIN");
 
 	private final String key;
