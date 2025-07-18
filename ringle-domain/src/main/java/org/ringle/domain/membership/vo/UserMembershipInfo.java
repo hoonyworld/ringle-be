@@ -21,22 +21,22 @@ public record UserMembershipInfo(
 	MembershipStatus status
 ) {
 	public static UserMembershipInfo newInstance(
-		UserMembership membership,
+		UserMembership userMembership,
 		MembershipPlan membershipPlan
 	) {
 		return new UserMembershipInfo(
-			membership.getId(),
+			userMembership.getId(),
 			membershipPlan.getName(),
 			membershipPlan.getConversationCount(),
-			membership.getRemainingConversations(),
+			userMembership.getRemainingConversations(),
 			membershipPlan.getRolePlayingCount(),
-			membership.getRemainingRolePlaying(),
+			userMembership.getRemainingRolePlaying(),
 			membershipPlan.getDiscussionCount(),
-			membership.getRemainingDiscussion(),
+			userMembership.getRemainingDiscussion(),
 			membershipPlan.getAnalysisCount(),
-			membership.getRemainingAnalysis(),
-			membership.getExpiryDate(),
-			membership.getStatus()
+			userMembership.getRemainingAnalysis(),
+			userMembership.getExpiryDate(),
+			userMembership.getStatus()
 		);
 	}
 }
