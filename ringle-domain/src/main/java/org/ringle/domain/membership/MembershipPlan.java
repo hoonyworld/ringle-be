@@ -51,6 +51,9 @@ public class MembershipPlan extends BaseTimeEntity {
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal price;
 
+	@Column(nullable = false)
+	private int priority;
+
 	@Builder(access = AccessLevel.PRIVATE)
 	private MembershipPlan(
 		String name,
@@ -60,7 +63,8 @@ public class MembershipPlan extends BaseTimeEntity {
 		int discussionCount,
 		int analysisCount,
 		int durationDays,
-		BigDecimal price
+		BigDecimal price,
+		int priority
 	) {
 		this.name = name;
 		this.customerType = customerType;
@@ -70,6 +74,7 @@ public class MembershipPlan extends BaseTimeEntity {
 		this.analysisCount = analysisCount;
 		this.durationDays = durationDays;
 		this.price = price;
+		this.priority = priority;
 	}
 
 	public static MembershipPlan create(
@@ -80,7 +85,8 @@ public class MembershipPlan extends BaseTimeEntity {
 		int discussionCount,
 		int analysisCount,
 		int durationDays,
-		BigDecimal price
+		BigDecimal price,
+		int priority
 	) {
 		return MembershipPlan.builder()
 			.name(name)
@@ -91,6 +97,7 @@ public class MembershipPlan extends BaseTimeEntity {
 			.analysisCount(analysisCount)
 			.durationDays(durationDays)
 			.price(price)
+			.priority(priority)
 			.build();
 	}
 
