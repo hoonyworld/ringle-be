@@ -25,9 +25,9 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	private final Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter;
-	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-	private final CustomAccessDeniedHandler customAccessDeniedHandler;
+	private static final String ROLE_ADMIN = "ADMIN";
+	private static final String ROLE_USER = "USER";
+	private static final String ROLE_COMPANY = "COMPANY";
 
 	private static final String[] WHITELIST_URLS = {
 		"/api/v1/auth/login",
@@ -37,6 +37,10 @@ public class SecurityConfig {
 		"/error",
 		"/"
 	};
+
+	private final Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter;
+	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -56,8 +60,10 @@ public class SecurityConfig {
 			)
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(WHITELIST_URLS).permitAll()
-				.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-				.requestMatchers("/api/v1/user/**").hasAnyRole("USER", "ADMIN")
+				.requestMatchers("/api/v1/admin/**").hasRole(ROLE_ADMIN)
+				.requestMatchers("/api/v1/user/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
+				.requestMatchers("/api/v1/membership/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
+				.requestMatchers("/api/v1/membership-plans/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
 				.requestMatchers("/api/v1/auth/**").authenticated()
 				.anyRequest().authenticated()
 			);
@@ -70,7 +76,7 @@ public class SecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);
 
