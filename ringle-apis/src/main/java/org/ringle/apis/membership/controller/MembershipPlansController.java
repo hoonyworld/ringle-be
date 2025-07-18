@@ -21,7 +21,7 @@ public class MembershipPlansController implements MembershipPlansApi {
 	public ResponseEntity<MembershipPlansInfoResponse> getMembershipPlans(
 		@AuthenticationPrincipal Long userId
 	) {
-		MembershipPlansInfoResponse response = membershipUseCase.getMembershipPlansInfo();
+		MembershipPlansInfoResponse response = membershipUseCase.getMembershipPlansInfo(userId);
 		return ResponseEntity.ok(response);
 	}
 }

@@ -5,5 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MembershipPlanRepository extends JpaRepository<MembershipPlan, Long> {
-	List<MembershipPlan> findAll();
+	List<MembershipPlan> findByCustomerType(CustomerType customerType);
+
 }
