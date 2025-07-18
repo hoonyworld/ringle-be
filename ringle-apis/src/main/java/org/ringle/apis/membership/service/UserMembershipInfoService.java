@@ -32,10 +32,6 @@ public class UserMembershipInfoService {
 
 		List<UserMembership> userMemberships = userMembershipRepository.findAllByUserId(user.getId());
 
-		if (userMemberships.isEmpty()) {
-			throw new UserMembershipNotFoundException(MembershipErrorCode.USER_MEMBERSHIP_NOT_FOUND);
-		}
-
 		return userMemberships.stream()
 			.map(userMembership -> {
 				MembershipPlan plan = membershipPlanRepository.findById(userMembership.getPlanId())
