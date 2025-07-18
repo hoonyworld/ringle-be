@@ -83,10 +83,11 @@ public class UserMembership extends BaseTimeEntity {
 		int remainingRolePlaying,
 		int remainingDiscussion,
 		int remainingAnalysis,
-		LocalDate startDate,
-		LocalDate expiryDate,
-		MembershipStatus status
+		int durationDays
 	) {
+		LocalDate startDate = LocalDate.now();
+		LocalDate expiryDate = startDate.plusDays(durationDays);
+
 		return UserMembership.builder()
 			.userId(userId)
 			.planId(planId)
@@ -96,9 +97,10 @@ public class UserMembership extends BaseTimeEntity {
 			.remainingAnalysis(remainingAnalysis)
 			.startDate(startDate)
 			.expiryDate(expiryDate)
-			.status(status)
+			.status(MembershipStatus.INACTIVE)
 			.build();
 	}
+
 
 	@Override
 	public boolean equals(Object o) {

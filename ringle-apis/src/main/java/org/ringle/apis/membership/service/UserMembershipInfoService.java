@@ -11,6 +11,7 @@ import org.ringle.domain.membership.MembershipPlan;
 import org.ringle.domain.membership.MembershipPlanRepository;
 import org.ringle.domain.membership.UserMembership;
 import org.ringle.domain.membership.UserMembershipRepository;
+import org.ringle.domain.membership.vo.MembershipPlansInfo;
 import org.ringle.domain.membership.vo.UserMembershipInfo;
 import org.ringle.domain.user.User;
 import org.ringle.domain.user.UserRepository;
@@ -42,6 +43,28 @@ public class UserMembershipInfoService {
 				return UserMembershipInfo.newInstance(userMembership, plan);
 			})
 			.toList();
+	}
+
+	public UserMembershipInfo createPendingMembership(Long userId, MembershipPlansInfo.MembershipPlanInfo planInfo) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+		UserMembership inActiveMembership = UserMembership.create(
+			user.getId(),
+			planInfo.id(),
+			planInfo.conversations(),
+			planInfo.rolePlaying(),
+			planInfo.discussion(),
+			planInfo.levelAnalysis(),
+			planInfo.durationDays()
+		);
+
+		UserMembership savedMembership = userMembershipRepository.save(inActiveMembership);
+
+		MembershipPlan membershipPlan = membershipPlanRepository.findById(planInfo.id())
+			.orElseThrow(() -> new MembershipPlanNotFoundException(MembershipErrorCode.MEMBERSHIP_NOT_FOUND));
+
+		return UserMembershipInfo.newInstance(savedMembership, membershipPlan);
 	}
 
 	public UserMembershipInfo getUserMemberShip(Long userId) {

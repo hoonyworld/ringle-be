@@ -42,10 +42,11 @@ public class MembershipUseCase {
 
 	@Transactional
 	public UserMembershipInfoResponse purchaseMembership(Long userId, PlanPurchaseRequest request) {
-		UserMembershipInfo userMembershipInfo = userMembershipInfoService.getUserMemberShip(userId);
 		MembershipPlanInfo planInfo = membershipPlanInfoService.getMembershipPlan(request.planId());
+		UserMembershipInfo pendingMembership = userMembershipInfoService.createPendingMembership(userId, planInfo);
 
-		paymentService.processPayment(userId, userMembershipInfo.id(), planInfo.price(), planInfo.id());
-		return UserMembershipInfoResponse.from(userMembershipInfo);
+		paymentService.processPayment(userId, pendingMembership.id(), planInfo.price(), planInfo.id());
+
+		return UserMembershipInfoResponse.from(pendingMembership);
 	}
 }
