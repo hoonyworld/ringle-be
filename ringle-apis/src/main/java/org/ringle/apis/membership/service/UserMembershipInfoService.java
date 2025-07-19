@@ -10,6 +10,7 @@ import org.ringle.apis.membership.exception.MembershipPlanNotFoundException;
 import org.ringle.apis.membership.exception.UserMembershipNotFoundException;
 import org.ringle.domain.membership.MembershipPlan;
 import org.ringle.domain.membership.MembershipPlanRepository;
+import org.ringle.domain.membership.MembershipStatus;
 import org.ringle.domain.membership.UserMembership;
 import org.ringle.domain.membership.UserMembershipRepository;
 import org.ringle.domain.membership.vo.MembershipPlansInfo;
@@ -83,6 +84,11 @@ public class UserMembershipInfoService {
 
 		if (!userMembership.getUserId().equals(userId)) {
 			throw new MembershipForbiddenException(MembershipErrorCode.MEMBERSHIP_FORBIDDEN);
+		}
+
+		boolean hasActivatedMembership = userMembershipRepository.existsByUserIdAndStatus(userId, MembershipStatus.ACTIVE);
+		if (hasActivatedMembership) {
+			throw new MembershipForbiddenException(MembershipErrorCode.ALREADY_ACTIVATED_MEMBERSHIP_EXISTS);
 		}
 
 		userMembership.activate();

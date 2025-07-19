@@ -9,4 +9,6 @@ public interface UserMembershipRepository extends JpaRepository<UserMembership, 
 	List<UserMembership> findAllByUserId(Long userId);
 
 	Optional<UserMembership> findByUserId(Long userId);
+
+	boolean existsByUserIdAndStatus(Long userId, MembershipStatus status);
 }
