@@ -9,6 +9,7 @@ spring:
         - persistence
         - jwt
         - redis
+        - ai
       test:
         - persistence
         - jwt

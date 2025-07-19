@@ -1,0 +1,7 @@
+gemini:
+  api-key: ${{GEMINI_TOKEN}}
+---
+spring:
+  config:
+    activate:
+      on-profile: test
