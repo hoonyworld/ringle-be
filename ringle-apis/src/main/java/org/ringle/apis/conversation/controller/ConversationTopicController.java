@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/conversation-topics")
-public class ConversationTopicController {
+public class ConversationTopicController implements ConversationTopicApi {
 	private final ConversationUseCase conversationUseCase;
 
 	@GetMapping
