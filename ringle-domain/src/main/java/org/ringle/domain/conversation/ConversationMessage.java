@@ -38,23 +38,18 @@ public class ConversationMessage extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String message;
 
-	@Column
-	private String audioUrl;
-
 	@Builder(access = AccessLevel.PRIVATE)
-	private ConversationMessage(UUID sessionId, SenderType sender, String message, String audioUrl) {
+	private ConversationMessage(UUID sessionId, SenderType sender, String message) {
 		this.sessionId = sessionId;
 		this.sender = sender;
 		this.message = message;
-		this.audioUrl = audioUrl;
 	}
 
-	public static ConversationMessage create(UUID sessionId, SenderType sender, String message, String audioUrl) {
+	public static ConversationMessage create(UUID sessionId, SenderType sender, String message) {
 		return ConversationMessage.builder()
 			.sessionId(sessionId)
 			.sender(sender)
 			.message(message)
-			.audioUrl(audioUrl)
 			.build();
 	}
 
