@@ -1,5 +1,6 @@
 gemini:
-  api-key: ${{GEMINI_TOKEN}}
+  api-key: ${GEMINI_KEY}
+  model-name: "gemini-2.0-flash"
 ---
 spring:
   config:

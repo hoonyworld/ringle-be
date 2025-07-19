@@ -13,10 +13,17 @@ spring:
       test:
         - persistence
         - jwt
+
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 30MB
+
+  cloud:
+    gcp:
+      project-id: sapient-helix-466420-j5
+      credentials:
+        path: optional:file:secret/stt.json
 
 springdoc:
   swagger-ui:
