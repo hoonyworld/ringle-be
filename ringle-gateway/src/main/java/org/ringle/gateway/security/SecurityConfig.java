@@ -64,6 +64,8 @@ public class SecurityConfig {
 				.requestMatchers("/api/v1/user/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
 				.requestMatchers("/api/v1/membership/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
 				.requestMatchers("/api/v1/membership-plans/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
+				.requestMatchers("/api/v1/conversation/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
+				.requestMatchers("/api/v1/conversation-topics/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
 				.requestMatchers("/api/v1/auth/**").authenticated()
 				.anyRequest().authenticated()
 			);
