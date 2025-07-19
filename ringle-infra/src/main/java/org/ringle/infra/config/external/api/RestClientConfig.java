@@ -20,10 +20,10 @@ public class RestClientConfig implements InfraBaseConfig {
 		return createConfiguredRestClientBuilder().build();
 	}
 
-	@Bean("aladinApiRestClient")
-	public RestClient aladinRestClient() {
+	@Bean("geminiApiRestClient")
+	public RestClient geminiRestClient() {
 		return createConfiguredRestClientBuilder()
-			.baseUrl("http://www.aladin.co.kr/ttb/api")
+			.baseUrl("https://generativelanguage.googleapis.com/v1beta")
 			.build();
 	}
 
