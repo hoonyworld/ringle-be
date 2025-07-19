@@ -35,7 +35,7 @@ public class ConversationMessage extends BaseTimeEntity {
 	private SenderType sender;
 
 	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "LONGTEXT")
 	private String message;
 
 	@Builder(access = AccessLevel.PRIVATE)
