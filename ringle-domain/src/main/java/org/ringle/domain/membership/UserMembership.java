@@ -112,6 +112,13 @@ public class UserMembership extends BaseTimeEntity {
 		this.expiryDate = this.startDate.plusDays(durationInDays);
 	}
 
+	public void decrementConversations() {
+		if (this.remainingConversations <= 0) {
+			throw new IllegalStateException("남은 대화 횟수가 없습니다.");
+		}
+		this.remainingConversations--;
+	}
+
 
 	@Override
 	public boolean equals(Object o) {

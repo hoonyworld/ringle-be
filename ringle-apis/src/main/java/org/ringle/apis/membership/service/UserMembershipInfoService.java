@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ringle.apis.auth.exception.UserErrorCode;
 import org.ringle.apis.auth.exception.UserNotFoundException;
+import org.ringle.apis.membership.exception.InsufficientCreditsException;
 import org.ringle.apis.membership.exception.MembershipErrorCode;
 import org.ringle.apis.membership.exception.MembershipForbiddenException;
 import org.ringle.apis.membership.exception.MembershipPlanNotFoundException;
@@ -93,4 +94,17 @@ public class UserMembershipInfoService {
 
 		userMembership.activate();
 	}
+
+	public void decrementConversationCredit(Long userId) {
+		UserMembership activeMembership = userMembershipRepository
+			.findByUserIdAndStatusWithLock(userId, MembershipStatus.ACTIVE)
+			.orElseThrow(() -> new UserMembershipNotFoundException(MembershipErrorCode.NO_ACTIVATED_MEMBERSHIP));
+
+		if (activeMembership.getRemainingConversations() <= 0) {
+			throw new InsufficientCreditsException(MembershipErrorCode.CONVERSATION_LIMIT_EXCEEDED);
+		}
+
+		activeMembership.decrementConversations();
+	}
+
 }
