@@ -34,7 +34,7 @@ public class ConversationUseCase {
 
 	@Transactional
 	public StartConversationResponse startConversation(Long userId, StartConversationRequest request) {
-		if (!request.forceCreate()) {
+		if (!request.force()) {
 			Optional<ConversationSession> existingSession = conversationSessionService.findActiveSession(userId,
 				request.topicId());
 

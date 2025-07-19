@@ -8,7 +8,7 @@ public record StartConversationRequest(
 	Long topicId,
 
 	@Schema(description = "기존 세션 확인을 건너뛰고 강제로 새 세션을 생성할지 여부", defaultValue = "false")
-	boolean forceCreate
+	boolean force
 ) {
 	public StartConversationRequest(Long topicId) {
 		this(topicId, false);
