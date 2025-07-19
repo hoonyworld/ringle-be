@@ -56,6 +56,10 @@ public class ConversationSession {
 			.build();
 	}
 
+	public void close() {
+		this.status = SessionStatus.CLOSED;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

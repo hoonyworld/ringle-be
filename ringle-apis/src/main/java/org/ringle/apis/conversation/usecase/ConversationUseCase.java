@@ -41,6 +41,12 @@ public class ConversationUseCase {
 			if (existingSession.isPresent()) {
 				return StartConversationResponse.of(existingSession.get().getId(), SessionStatus.EXISTING);
 			}
+		} else {
+			conversationSessionService.findActiveSession(userId, request.topicId())
+				.ifPresent(session -> {
+					session.close();
+					conversationSessionService.saveSession(session);
+				});
 		}
 
 		userMembershipInfoService.decrementConversationCredit(userId);

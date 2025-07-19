@@ -39,4 +39,8 @@ public class ConversationSessionService {
 			SessionStatus.ACTIVE
 		);
 	}
+
+	public void saveSession(ConversationSession session) {
+		conversationSessionRepository.save(session);
+	}
 }
