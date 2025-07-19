@@ -6,6 +6,8 @@ import org.ringle.apis.membership.dto.response.UserMembershipInfoResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -55,4 +57,24 @@ public interface MembershipApi {
 		@Parameter(description = "구매 요청 정보")
 		@Valid @RequestBody PlanPurchaseRequest request
 	);
+
+	@Operation(
+		summary = "멤버십 활성화",
+		description = "특정 멤버십을 활성화합니다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "204", description = "멤버십 활성화 성공"),
+		@ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+		@ApiResponse(responseCode = "401", description = "인증 실패", content = @Content),
+		@ApiResponse(responseCode = "404", description = "멤버십 또는 사용자 정보 없음", content = @Content)
+	})
+	@PatchMapping("/{membershipId}/activate")
+	ResponseEntity<Void> activateMembership(
+		@Parameter(hidden = true, description = "인증된 사용자 ID")
+		@AuthenticationPrincipal Long userId,
+
+		@Parameter(description = "활성화할 멤버십 ID", example = "1")
+		@PathVariable Long membershipId
+	);
+
 }
