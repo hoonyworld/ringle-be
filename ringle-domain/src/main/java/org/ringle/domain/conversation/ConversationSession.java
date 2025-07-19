@@ -5,15 +5,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.hibernate.annotations.UuidGenerator;
+import org.ringle.globalutils.constants.SessionStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @Getter
 @Entity
@@ -28,30 +30,38 @@ public class ConversationSession {
 	private Long userId;
 
 	@Column(nullable = false)
-	private Integer topicId;
+	private Long topicId;
 
 	@Column(nullable = false)
 	private LocalDateTime startTime;
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private SessionStatus status;
+
 	@Builder(access = AccessLevel.PRIVATE)
-	private ConversationSession(Long userId, Integer topicId, LocalDateTime startTime) {
+	private ConversationSession(Long userId, Long topicId, LocalDateTime startTime, SessionStatus status) {
 		this.userId = userId;
 		this.topicId = topicId;
 		this.startTime = startTime;
+		this.status = status;
 	}
 
-	public static ConversationSession create(Long userId, Integer topicId, LocalDateTime startTime) {
+	public static ConversationSession create(Long userId, Long topicId, LocalDateTime startTime) {
 		return ConversationSession.builder()
 			.userId(userId)
 			.topicId(topicId)
 			.startTime(startTime)
+			.status(SessionStatus.ACTIVE)
 			.build();
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof ConversationSession that)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof ConversationSession that))
+			return false;
 		return id != null && id.equals(that.id);
 	}
 
