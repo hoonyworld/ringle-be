@@ -9,9 +9,12 @@ import org.ringle.globalutils.auth.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
@@ -25,17 +28,20 @@ public class JwtTokenProvider {
 	private static final String REFRESH_TOKEN_TYPE = "refresh";
 
 	private final JwtEncoder jwtEncoder;
+	private final JwtDecoder jwtDecoder;
 	private final long accessTokenExpiration;
 	private final long refreshTokenExpiration;
 
 	public JwtTokenProvider(
 		JwtEncoder jwtEncoder,
+		JwtDecoder jwtDecoder,
 		@Value("${jwt.access-token-expiration}")
 		long accessTokenExpiration,
 		@Value("${jwt.refresh-token-expiration}")
 		long refreshTokenExpiration
 	) {
 		this.jwtEncoder = jwtEncoder;
+		this.jwtDecoder = jwtDecoder;
 		this.accessTokenExpiration = accessTokenExpiration;
 		this.refreshTokenExpiration = refreshTokenExpiration;
 	}
@@ -72,5 +78,15 @@ public class JwtTokenProvider {
 		JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build();
 		JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(header, claimsSet);
 		return jwtEncoder.encode(encoderParameters).getTokenValue();
+	}
+
+	public Long getUserIdFromToken(String token) {
+		try {
+			Jwt decodedJwt = jwtDecoder.decode(token);
+			String subject = decodedJwt.getSubject();
+			return Long.valueOf(subject);
+		} catch (JwtException | NumberFormatException e) {
+			throw new IllegalArgumentException("Invalid JWT token", e);
+		}
 	}
 }

@@ -27,4 +27,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 	public long getRefreshTokenExpiration() {
 		return jwtTokenProvider.getRefreshTokenExpiration();
 	}
+
+	@Override
+	public Long getUserIdFromToken(String token) {
+		return jwtTokenProvider.getUserIdFromToken(token);
+	}
 }

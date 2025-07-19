@@ -8,4 +8,6 @@ public interface JwtTokenService {
 	String generateRefreshToken(Long userId);
 
 	long getRefreshTokenExpiration();
+
+	Long getUserIdFromToken(String toke);
 }
