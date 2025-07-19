@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -38,12 +40,16 @@ public class SecurityConfig {
 		"/"
 	};
 
+	private final JwtDecoder jwtDecoder;
 	private final Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter;
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		org.ringle.gateway.security.SseJwtAuthenticationFilter sseFilter = new org.ringle.gateway.security.SseJwtAuthenticationFilter(
+			jwtDecoder, jwtAuthenticationConverter);
+
 		http
 			.cors(Customizer.withDefaults())
 			.csrf(AbstractHttpConfigurer::disable)
@@ -66,9 +72,12 @@ public class SecurityConfig {
 				.requestMatchers("/api/v1/membership-plans/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
 				.requestMatchers("/api/v1/conversation/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
 				.requestMatchers("/api/v1/conversation-topics/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
+				.requestMatchers("/api/v1/subscribe/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
+				.requestMatchers("/api/v1/speech/stt/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
 				.requestMatchers("/api/v1/auth/**").authenticated()
 				.anyRequest().authenticated()
-			);
+			)
+			.addFilterBefore(sseFilter, BearerTokenAuthenticationFilter.class);
 
 		return http.build();
 	}
