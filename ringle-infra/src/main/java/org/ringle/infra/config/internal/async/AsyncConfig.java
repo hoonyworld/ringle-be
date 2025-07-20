@@ -1,17 +1,19 @@
 package org.ringle.infra.config.internal.async;
 
+import static org.springframework.context.support.AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME;
+
+import java.util.concurrent.Executor;
+
 import org.ringle.infra.InfraBaseConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-
-import java.util.concurrent.Executor;
-
-import static org.springframework.context.support.AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME;
+import org.springframework.security.concurrent.DelegatingSecurityContextExecutor;
 
 @Configuration
 @EnableAsync
@@ -23,7 +25,7 @@ public class AsyncConfig implements InfraBaseConfig, AsyncConfigurer {
 	 */
 	@Override
 	public Executor getAsyncExecutor() {
-		return taskExecutor();
+		return new DelegatingSecurityContextExecutor(taskExecutor());
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class AsyncConfig implements InfraBaseConfig, AsyncConfigurer {
 	 * 비동기 스레드로 SecurityContext를 전달 가능하도록 변경해야 함
 	 */
 	@Bean(name = "taskExecutor")
-	public Executor taskExecutor() {
+	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(3);
 		executor.setThreadNamePrefix("async-");
