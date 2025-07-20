@@ -19,8 +19,8 @@
 -   **도메인 주도 및 계층형 아키텍처:** `Controller` → `UseCase` → `Service` → `Repository`로 책임을 명확히 분리했습니다. `User`, `Membership`, `Conversation` 등 핵심 도메인별로 패키지를 구성하여 높은 응집도와 낮은 결합도를 유지합니다.
 -   **실시간 통신 및 비동기 처리 파이프라인:**
     -   **SSE 연결 관리:** Spring MVC의 `SseEmitter`를 사용하여 클라이언트별로 실시간 단방향 통신 채널을 수립하고, `ConcurrentHashMap`으로 다수의 연결을 스레드로부터 안전하게 관리합니다.
-    -   **비동기 작업 위임:** STT 처리처럼 빠른 응답이 필요한 작업과 AI 답변 생성처럼 오래 걸리는 작업을 분리하기 위해 **`@Async`**를 사용합니다. STT 결과를 클라이언트에 즉시 반환한 뒤, 별도의 스레드에서 AI 작업을 비동기적으로 처리하여 사용자 경험을 저해하지 않도록 합니다.
-    -   **외부 AI 연동:** **`RestClient`**를 사용하여 Google Cloud의 Speech-to-Text 및 Gemini API를 호출합니다. 특히, Gemini의 스트리밍 응답(JSON 배열)을 안정적으로 파싱하기 위해 저수준의 **`JsonParser`**를 직접 제어하여 데이터를 실시간으로 처리합니다.
+    -   **비동기 작업 위임:** STT 처리처럼 빠른 응답이 필요한 작업과 AI 답변 생성처럼 오래 걸리는 작업을 분리하기 위해 `@Async`를 사용합니다. STT 결과를 클라이언트에 즉시 반환한 뒤, 별도의 스레드에서 AI 작업을 비동기적으로 처리하여 사용자 경험을 저해하지 않도록 합니다.
+    -   **외부 AI 연동:** `RestClient`를 사용하여 Google Cloud의 Speech-to-Text 및 Gemini API를 호출합니다. 특히, Gemini의 스트리밍 응답(JSON 배열)을 안정적으로 파싱하기 위해 저수준의 `JsonParser`를 직접 제어하여 데이터를 실시간으로 처리합니다.
 -   **보안 및 데이터 정합성:**
     -   **인증/인가:** **Spring Security**를 통해 JWT 기반의 인증 시스템을 구축했습니다. `SecurityConfig`에서 `hasAuthority` 규칙을 사용하여 역할별 API 접근을 제어하고, `EventSource`의 제약을 해결하기 위해 URL 경로에 토큰을 포함하여 SSE 연결을 인증하는 방식을 구현했습니다.
     -   **동시성 제어:** 여러 사용자가 동시에 멤버십 횟수를 차감할 때 발생할 수 있는 데이터 불일치(race condition) 문제를 방지하기 위해, `UserMembershipRepository`의 조회 메서드에 **`@Lock(LockModeType.PESSIMISTIC_WRITE)`** (비관적 락)을 적용하여 데이터의 정합성을 보장합니다.
