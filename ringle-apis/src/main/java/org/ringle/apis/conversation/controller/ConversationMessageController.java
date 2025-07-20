@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.ringle.apis.conversation.dto.response.SttResponse;
 import org.ringle.apis.conversation.usecase.SseUseCase;
 import org.ringle.apis.conversation.usecase.SttUseCase;
-import org.ringle.gateway.jwt.JwtTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -24,10 +23,9 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class ConversationMessageController implements ConversationMessageApi{
+public class ConversationMessageController implements ConversationMessageApi {
 	private final SseUseCase sseUseCase;
 	private final SttUseCase sttUseCase;
-	// private final JwtTokenService jwtTokenService;
 	private final JwtDecoder jwtDecoder;
 
 	@GetMapping("/subscribe/{token}")
