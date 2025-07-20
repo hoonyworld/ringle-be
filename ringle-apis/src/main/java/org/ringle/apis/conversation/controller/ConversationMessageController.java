@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class ConversationMessageController {
+public class ConversationMessageController implements ConversationMessageApi{
 	private final SseUseCase sseUseCase;
 	private final SttUseCase sttUseCase;
 	private final JwtTokenService jwtTokenService;
