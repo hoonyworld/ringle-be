@@ -8,7 +8,10 @@ import org.ringle.apis.conversation.usecase.SttUseCase;
 import org.ringle.gateway.jwt.JwtTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,11 +27,13 @@ import lombok.RequiredArgsConstructor;
 public class ConversationMessageController implements ConversationMessageApi{
 	private final SseUseCase sseUseCase;
 	private final SttUseCase sttUseCase;
-	private final JwtTokenService jwtTokenService;
+	// private final JwtTokenService jwtTokenService;
+	private final JwtDecoder jwtDecoder;
 
-	@GetMapping("/subscribe")
-	public SseEmitter subscribe(@RequestParam("token") String token) {
-		Long userId = jwtTokenService.getUserIdFromToken(token);
+	@GetMapping("/subscribe/{token}")
+	public SseEmitter subscribe(@PathVariable String token) {
+		Jwt jwt = jwtDecoder.decode(token);
+		Long userId = Long.valueOf(jwt.getSubject());
 		return sseUseCase.subscribe(userId);
 	}
 

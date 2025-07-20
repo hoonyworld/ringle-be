@@ -27,15 +27,16 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	private static final String ROLE_ADMIN = "ADMIN";
-	private static final String ROLE_USER = "USER";
-	private static final String ROLE_COMPANY = "COMPANY";
+	private static final String AUTHORITY_ADMIN = "ROLE_ADMIN";
+	private static final String AUTHORITY_USER = "ROLE_USER";
+	private static final String AUTHORITY_COMPANY = "ROLE_COMPANY";
 
 	private static final String[] WHITELIST_URLS = {
 		"/api/v1/auth/login",
 		"/actuator/**",
 		"/swagger-ui/**",
 		"/v3/api-docs/**",
+		"/api/v1/subscribe/**",
 		"/error",
 		"/"
 	};
@@ -47,9 +48,6 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		org.ringle.gateway.security.SseJwtAuthenticationFilter sseFilter = new org.ringle.gateway.security.SseJwtAuthenticationFilter(
-			jwtDecoder, jwtAuthenticationConverter);
-
 		http
 			.cors(Customizer.withDefaults())
 			.csrf(AbstractHttpConfigurer::disable)
@@ -66,18 +64,17 @@ public class SecurityConfig {
 			)
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(WHITELIST_URLS).permitAll()
-				.requestMatchers("/api/v1/admin/**").hasRole(ROLE_ADMIN)
-				.requestMatchers("/api/v1/user/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
-				.requestMatchers("/api/v1/membership/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
-				.requestMatchers("/api/v1/membership-plans/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
-				.requestMatchers("/api/v1/conversation/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
-				.requestMatchers("/api/v1/conversation-topics/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
-				.requestMatchers("/api/v1/subscribe/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
-				.requestMatchers("/api/v1/speech/stt/**").hasAnyRole(ROLE_USER, ROLE_ADMIN, ROLE_COMPANY)
+				.requestMatchers("/api/v1/admin/**").hasAuthority(AUTHORITY_ADMIN)
+				.requestMatchers("/api/v1/user/**").hasAnyAuthority(AUTHORITY_USER, AUTHORITY_ADMIN, AUTHORITY_COMPANY)
+				.requestMatchers("/api/v1/membership/**").hasAnyAuthority(AUTHORITY_USER, AUTHORITY_ADMIN, AUTHORITY_COMPANY)
+				.requestMatchers("/api/v1/membership-plans/**").hasAnyAuthority(AUTHORITY_USER, AUTHORITY_ADMIN, AUTHORITY_COMPANY)
+				.requestMatchers("/api/v1/conversation-topics/**").hasAnyAuthority(AUTHORITY_USER, AUTHORITY_ADMIN, AUTHORITY_COMPANY)
+
+				.requestMatchers("/api/v1/speech/stt").authenticated()
+				.requestMatchers("/api/v1/conversation/**").authenticated()
 				.requestMatchers("/api/v1/auth/**").authenticated()
 				.anyRequest().authenticated()
-			)
-			.addFilterBefore(sseFilter, BearerTokenAuthenticationFilter.class);
+			);
 
 		return http.build();
 	}

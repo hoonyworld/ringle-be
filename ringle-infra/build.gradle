@@ -16,6 +16,8 @@ dependencies {
 	testImplementation 'org.testcontainers:mysql:1.21.3'
 	testImplementation 'org.testcontainers:junit-jupiter:1.21.3'
 	testImplementation 'com.redis:testcontainers-redis:2.2.2'
+
+	implementation 'org.springframework.security:spring-security-core'
 }
 
 bootJar {

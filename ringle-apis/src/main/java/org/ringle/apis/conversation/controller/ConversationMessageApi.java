@@ -6,6 +6,7 @@ import org.ringle.apis.conversation.dto.response.SttResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,14 +39,14 @@ public interface ConversationMessageApi {
 		@ApiResponse(responseCode = "400", description = "잘못된 토큰"),
 		@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
-	@GetMapping("/subscribe")
+	@GetMapping("/subscribe/{token}")
 	SseEmitter subscribe(
 		@Parameter(
 			description = "JWT 인증 토큰",
 			required = true,
 			example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 		)
-		@RequestParam("token") String token
+		@PathVariable("token") String token
 	);
 
 	@Operation(

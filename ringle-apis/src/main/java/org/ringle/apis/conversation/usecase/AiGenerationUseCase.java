@@ -28,5 +28,7 @@ public class AiGenerationUseCase {
 
 		AiCompleteEvent finalEvent = AiCompleteEvent.of(fullAiResponseText);
 		sseService.sendEvent(userId, "ai_complete", finalEvent);
+
+		sseService.completeEmitter(userId);
 	}
 }

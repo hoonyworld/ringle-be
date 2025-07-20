@@ -2,13 +2,17 @@ package org.ringle.apis.conversation.usecase;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.ringle.apis.conversation.dto.request.StartConversationRequest;
+import org.ringle.apis.conversation.dto.response.ConversationHistoryResponse;
 import org.ringle.apis.conversation.dto.response.ConversationTopicsResponse;
 import org.ringle.apis.conversation.dto.response.StartConversationResponse;
+import org.ringle.apis.conversation.service.ConversationService;
 import org.ringle.apis.conversation.service.ConversationSessionService;
 import org.ringle.apis.conversation.service.ConversationTopicService;
 import org.ringle.apis.membership.service.UserMembershipInfoService;
+import org.ringle.domain.conversation.ConversationMessage;
 import org.ringle.domain.conversation.ConversationSession;
 import org.ringle.domain.conversation.vo.ConversationSessionInfo;
 import org.ringle.domain.conversation.vo.ConversationTopicInfo;
@@ -26,10 +30,23 @@ public class ConversationUseCase {
 	private final UserMembershipInfoService userMembershipInfoService;
 	private final ConversationSessionService conversationSessionService;
 	private final ConversationTopicService conversationTopicService;
+	private final ConversationService conversationService;
 
 	public ConversationTopicsResponse getConversationTopics() {
 		List<ConversationTopicInfo> allTopics = conversationTopicService.findAllTopics();
 		return ConversationTopicsResponse.from(allTopics);
+	}
+
+	public ConversationHistoryResponse getConversationHistory(Long userId, UUID sessionId) {
+		conversationSessionService.validateSessionOwner(userId, sessionId);
+
+		List<ConversationMessage> history = conversationService.findConversationHistory(sessionId);
+
+		List<ConversationHistoryResponse.ConversationHistoryMessageResponse> messages = history.stream()
+			.map(ConversationHistoryResponse.ConversationHistoryMessageResponse::from)
+			.toList();
+
+		return ConversationHistoryResponse.from(messages);
 	}
 
 	@Transactional
